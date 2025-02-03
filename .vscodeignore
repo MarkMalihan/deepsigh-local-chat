@@ -1,6 +1,5 @@
-.vscode/**
-.vscode-test/**
-src/**
+.vscode/
+.vscode-test/
 .gitignore
 .yarnrc
 vsc-extension-quickstart.md
@@ -9,3 +8,6 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+
+# Include media directory (make sure it's not excluded)
+!src/media/**

@@ -1,7 +1,8 @@
 {
   "name": "deepsigh",
-  "displayName": "deepsigh",
+  "displayName": "DeepSigh",
   "description": "ai chat using deepseek r1 7b",
+  "icon": "./src/media/deepsigh-icon.jpg",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.96.0"

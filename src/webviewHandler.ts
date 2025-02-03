@@ -29,7 +29,10 @@ export function setupWebviewMessageHandler(panel: vscode.WebviewPanel) {
       let responseText = "";
 
       try {
-        // Handle the chat response from the model
+        panel.webview.postMessage({
+          command: "loading",
+          isLoading: true,
+        });
         const streamResponse = await ollama.chat({
           model: "deepseek-r1:latest",
           messages: [{ role: "user", content: userPrompt }],
@@ -44,12 +47,15 @@ export function setupWebviewMessageHandler(panel: vscode.WebviewPanel) {
           });
         }
       } catch (error) {
-        // Handle errors and display them in the webview
         panel.webview.postMessage({
           command: "chatResponse",
           text: `Error: ${String(error)}`,
         });
-        console.log(error);
+      } finally {
+        panel.webview.postMessage({
+          command: "loading",
+          isLoading: false,
+        });
       }
     }
   });

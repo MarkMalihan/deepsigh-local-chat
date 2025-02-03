@@ -22,7 +22,8 @@ export function getWebviewContent(): string {
   
         <!-- Chat messages container -->
         <div id="response" class="message-box overflow-y-auto max-h-[700px] p-3 bg-gray-800 rounded-lg flex flex-col gap-3"></div>
-  
+        <div id="loadingIndicator" class="text-center text-gray-400 hidden">Thinking...</div>
+
         <!-- Input and button container -->
         <div class="flex gap-2">
           <textarea id="prompt" rows="3" placeholder="Ask something..." 
@@ -36,66 +37,56 @@ export function getWebviewContent(): string {
   
       <script>
         const vscode = acquireVsCodeApi();
-  
-        // Add event listener for sending the message or creating a new line
+
         document.getElementById("prompt").addEventListener("keydown", (event) => {
-          const textArea = event.target;
-          if (event.key === "Enter") {
-            if (event.shiftKey) {
-              // If Shift + Enter, add a new line
-              return; // Allow new line
-            } else {
-              // If Enter, send the message
-              const text = textArea.value.trim();
-              if (!text) return;
-  
-              addMessage(text, "user-message");
-              vscode.postMessage({ command: "chat", text });
-              textArea.value = "";
-              event.preventDefault(); // Prevent new line
-            }
+          if (event.key === "Enter" && !event.shiftKey) {
+            sendMessage();
+            event.preventDefault();
           }
         });
-  
-        // Send message on button click
-        document.getElementById("askButton").addEventListener("click", () => {
+
+        document.getElementById("askButton").addEventListener("click", sendMessage);
+
+        function sendMessage() {
           const text = document.getElementById("prompt").value.trim();
           if (!text) return;
-  
+
           addMessage(text, "user-message");
           vscode.postMessage({ command: "chat", text });
           document.getElementById("prompt").value = "";
-        });
-  
-        window.addEventListener("message", event => {
-          const { command, text } = event.data;
+        }
+
+        window.addEventListener("message", (event) => {
+          const { command, text, isLoading } = event.data;
           if (command === "chatResponse") {
             updateBotMessage(text);
+          } else if (command === "loading") {
+            document.getElementById("loadingIndicator").classList.toggle("hidden", !isLoading);
           }
         });
-  
+
         function addMessage(text, className) {
           const messageBox = document.getElementById("response");
           const messageWrapper = document.createElement("div");
           const message = document.createElement("div");
-  
+
           const isUser = className === "user-message";
           messageWrapper.className = \`flex \${isUser ? "justify-end" : "justify-start"}\`;
           message.className = \`p-3 rounded-lg max-w-2xl text-white text-sm/6 space-y-3 \${isUser ? "bg-blue-600" : "bg-gray-700"}\`;
-  
+
           message.innerHTML = marked.parse(text);
           Prism.highlightAll();
-  
+
           messageWrapper.appendChild(message);
           messageBox.appendChild(messageWrapper);
           messageBox.scrollTop = messageBox.scrollHeight;
         }
-  
+
         function updateBotMessage(text) {
           const messageBox = document.getElementById("response");
           let lastMessageWrapper = messageBox.lastElementChild;
           let lastMessage = lastMessageWrapper ? lastMessageWrapper.firstChild : null;
-  
+
           if (lastMessage && lastMessageWrapper.classList.contains("justify-start")) {
             lastMessage.innerHTML = marked.parse(text);
             Prism.highlightAll();

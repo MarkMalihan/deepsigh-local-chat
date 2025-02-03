@@ -67,6 +67,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+      <style>
+      think {
+      color:rgb(172, 172, 172);
+      font-style: italic;
+    }
+      </style>
     </head>
     <body>
       <div class="w-full rounded-lg flex flex-col gap-4 shadow-lg">

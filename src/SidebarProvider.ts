@@ -78,7 +78,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       <div class="w-full rounded-lg flex flex-col gap-4 shadow-lg">
         <h2 class="text-center text-white text-2xl font-semibold">DeepSigh Chat</h2>
 
-        <div id="response" class="message-box overflow-y-auto max-h-[700px] p-3 bg-gray-800 rounded-lg flex flex-col gap-3"></div>
+        <div id="response" class="message-box overflow-y-auto max-h-[700px] rounded-lg flex flex-col gap-3"></div>
         <div id="loadingIndicator" class="text-center text-gray-400 hidden">Thinking...</div>
 
         <div class="flex gap-2">
